@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Brief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F4F0E8;
+      --ink: #1A1A1A;
+      --ink-light: #444;
+      --ink-faint: #888;
+      --accent: #8B2500;
+      --rule: #C8C0B0;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .masthead {
+      border-bottom: 3px double var(--ink);
+      padding: 24px 40px 16px;
+      text-align: center;
+    }
+
+    .masthead-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 8px;
+    }
+
+    .masthead h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .masthead-tagline {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-top: 6px;
+    }
+
+    .tab-bar-wrapper {
+      border-bottom: 1px solid var(--rule);
+      background: var(--cream);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .tab-bar {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 0 40px;
+    }
+
+    .tab-bar::-webkit-scrollbar { display: none; }
+
+    .tab {
+      flex-shrink: 0;
+      padding: 14px 20px;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .tab:hover { color: var(--ink); }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 24px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .refresh-btn {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: none;
+      border: 1px solid var(--accent);
+      padding: 5px 14px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .refresh-btn:hover { background: var(--accent); color: var(--cream); }
+    .refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .story-card {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .story-card:nth-child(odd) { padding-right: 40px; border-right: 1px solid var(--rule); }
+    .story-card:nth-child(even) { padding-left: 40px; }
+    .story-card:nth-last-child(-n+2) { border-bottom: none; }
+
+    .story-number {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .story-headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(18px, 2.2vw, 24px);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .story-summary {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-light);
+      margin-bottom: 16px;
+    }
+
+    .why-matters {
+      border-top: 1px solid var(--rule);
+      padding-top: 12px;
+    }
+
+    .why-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .why-text {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+
+    .story-source {
+      margin-top: 10px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .loading-state {
+      padding: 60px 0;
+      text-align: center;
+      color: var(--ink-faint);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--rule);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skeleton-card {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .skeleton-card:nth-child(odd) { padding-right: 40px; border-right: 1px solid var(--rule); }
+    .skeleton-card:nth-child(even) { padding-left: 40px; }
+
+    .skeleton-line {
+      background: var(--rule);
+      border-radius: 2px;
+      margin-bottom: 10px;
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .error-state {
+      padding: 40px;
+      text-align: center;
+      border: 1px solid var(--rule);
+    }
+
+    .error-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .error-msg {
+      font-size: 13px;
+      color: var(--ink-faint);
+      margin-bottom: 20px;
+    }
+
+    .retry-btn {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--accent);
+      border: none;
+      padding: 8px 20px;
+      cursor: pointer;
+    }
+
+    footer {
+      border-top: 3px double var(--ink);
+      margin-top: 60px;
+      padding: 20px 40px;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    @media (max-width: 700px) {
+      .masthead { padding: 16px 20px 12px; }
+      .tab-bar { padding: 0 16px; }
+      .content { padding: 24px 20px; }
+      .story-grid, .skeleton-grid { grid-template-columns: 1fr; }
+      .story-card { padding: 24px 0 !important; border-right: none !important; }
+      .story-card:last-child { border-bottom: none; }
+      .skeleton-card { padding: 24px 0 !important; border-right: none !important; }
+      footer { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-meta">
+      <span id="today-date"></span>
+      <span>Morning Edition</span>
+      <span>Powered by Claude</span>
+    </div>
+    <h1>THE BRIEF</h1>
+    <p class="masthead-tagline">The stories that matter, distilled</p>
+  </header>
+
+  <div class="tab-bar-wrapper">
+    <div class="tab-bar" id="tab-bar"></div>
+  </div>
+
+  <main class="content">
+    <div id="panel"></div>
+  </main>
+
+  <footer>&copy; The Brief &mdash; News summaries generated by Claude AI</footer>
+
+  <script>
+    const panel = document.getElementById('panel');
+    const tabBar = document.getElementById('tab-bar');
+
+    document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-GB', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+
+    let categories = [];
+    let activeTab = null;
+    const cache = {};
+
+    async function init() {
+      const res = await fetch('/api/categories');
+      categories = await res.json();
+      renderTabs();
+      if (categories.length) activateTab(categories[0].id);
+    }
+
+    function renderTabs() {
+      tabBar.innerHTML = '';
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'tab';
+        btn.textContent = cat.label;
+        btn.dataset.id = cat.id;
+        btn.addEventListener('click', () => activateTab(cat.id));
+        tabBar.appendChild(btn);
+      });
+    }
+
+    function activateTab(id) {
+      activeTab = id;
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.id === id);
+      });
+      renderPanel(id);
+    }
+
+    function renderPanel(id) {
+      const cat = categories.find(c => c.id === id);
+      if (!cat) return;
+      if (cache[id]) { showStories(cat, cache[id]); return; }
+      showLoading(cat);
+      loadStories(id, cat);
+    }
+
+    function showLoading(cat) {
+      panel.innerHTML = `
+        <div class="section-header">
+          <span class="section-title">${cat.label}</span>
+          <button class="refresh-btn" disabled>Fetching&hellip;</button>
+        </div>
+        <div class="skeleton-grid">
+          ${[1,2,3,4].map(() => `
+            <div class="skeleton-card">
+              <div class="skeleton-line" style="height:10px;width:60px;"></div>
+              <div class="skeleton-line" style="height:22px;width:90%;"></div>
+              <div class="skeleton-line" style="height:22px;width:70%;margin-bottom:16px;"></div>
+              <div class="skeleton-line" style="height:14px;width:100%;"></div>
+              <div class="skeleton-line" style="height:14px;width:85%;"></div>
+              <div class="skeleton-line" style="height:14px;width:75%;"></div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="loading-state" style="margin-top:24px;">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">Searching the news&hellip;</p>
+        </div>
+      `;
+    }
+
+    async function loadStories(id, cat) {
+      try {
+        const res = await fetch(`/api/briefing/${id}`);
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        cache[id] = data;
+        if (activeTab === id) showStories(cat, data);
+      } catch (err) {
+        if (activeTab === id) showError(cat, id, err.message);
+      }
+    }
+
+    function showStories(cat, data) {
+      const timeStr = new Date(data.fetchedAt).toLocaleTimeString('en-GB', {
+        hour: '2-digit', minute: '2-digit'
+      });
+      panel.innerHTML = `
+        <div class="section-header">
+          <span class="section-title">${cat.label}</span>
+          <button class="refresh-btn" id="refresh-btn">Refresh</button>
+        </div>
+        <div class="story-grid">
+          ${data.stories.map((s, i) => `
+            <div class="story-card">
+              <p class="story-number">Story ${i + 1}</p>
+              <h2 class="story-headline">${escHtml(s.headline)}</h2>
+              <p class="story-summary">${escHtml(s.summary)}</p>
+              <div class="why-matters">
+                <p class="why-label">Why it matters</p>
+                <p class="why-text">${escHtml(s.why_it_matters)}</p>
+              </div>
+              <p class="story-source">&mdash; ${escHtml(s.source)}</p>
+            </div>
+          `).join('')}
+        </div>
+        <p style="margin-top:16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);text-align:right;">Fetched at ${timeStr}</p>
+      `;
+      document.getElementById('refresh-btn').addEventListener('click', () => {
+        delete cache[cat.id];
+        showLoading(cat);
+        loadStories(cat.id, cat);
+      });
+    }
+
+    function showError(cat, id, msg) {
+      panel.innerHTML = `
+        <div class="section-header">
+          <span class="section-title">${cat.label}</span>
+          <button class="refresh-btn" id="refresh-btn">Retry</button>
+        </div>
+        <div class="error-state">
+          <p class="error-title">Could not load briefing</p>
+          <p class="error-msg">${escHtml(msg)}</p>
+          <button class="retry-btn" id="retry-btn">Try Again</button>
+        </div>
+      `;
+      const retry = () => { delete cache[id]; showLoading(cat); loadStories(id, cat); };
+      document.getElementById('refresh-btn').addEventListener('click', retry);
+      document.getElementById('retry-btn').addEventListener('click', retry);
+    }
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    init();
+  </script>
+</body>
+</html>
